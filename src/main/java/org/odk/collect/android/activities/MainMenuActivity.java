@@ -23,7 +23,14 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.celllife.hpv.HPVConsts;
+import org.celllife.hpv.LoadHPVFormTask;
 import org.odk.collect.android.R;
+import org.odk.collect.android.activities.FileManagerTabs;
+import org.odk.collect.android.activities.FormDownloadList;
+import org.odk.collect.android.activities.FormEntryActivity;
+import org.odk.collect.android.activities.InstanceChooserList;
+import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.PreferencesActivity;
@@ -40,6 +47,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.ContentObserver;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -74,6 +82,7 @@ public class MainMenuActivity extends Activity {
 	private static final int MENU_ADMIN = Menu.FIRST + 1;
 
 	// buttons
+	private Button mInitialDataButton;
 	private Button mEnterDataButton;
 	private Button mManageFilesButton;
 	private Button mSendDataButton;
@@ -145,6 +154,36 @@ public class MainMenuActivity extends Activity {
 
 		mAdminPreferences = this.getSharedPreferences(
 				AdminPreferencesActivity.ADMIN_PREFERENCES, 0);
+		
+		// initial data button
+		mInitialDataButton = (Button) findViewById(R.id.initial_data);
+		mInitialDataButton.setText(getString(R.string.initial_data));
+		mInitialDataButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // DAGMAR: FIXME: figure out what happens next ...
+                LoadHPVFormTask task = new LoadHPVFormTask(MainMenuActivity.this.getApplicationContext()) {
+                    @Override
+                    protected void onPostExecute(Uri result) {
+                        super.onPostExecute(result);
+                        if (result == null) {
+                            createErrorDialog(getString(R.string.HPV_error_no_form), EXIT);
+                        } else {
+                            // FIXME: will probably need a specific school form also...
+                            Intent intent = new Intent(Intent.ACTION_EDIT, result);
+                            intent.putExtra(FormEntryActivity.DATA_SKIP_TO_QUESTION, HPVConsts.HPV_FORM_BINDING_LEARNER_NAME);
+                            startActivity(intent);
+                        }
+                    }
+                };
+                task.execute(HPVConsts.HPV_FORM_NAME);
+                /*Collect.getInstance().getActivityLogger()
+                        .logAction(this, "fillBlankForm", "click");
+                Intent i = new Intent(getApplicationContext(),
+                        FormChooserList.class);
+                startActivity(i);*/
+            }
+        });
 
 		// enter data button. expects a result.
 		mEnterDataButton = (Button) findViewById(R.id.enter_data);
@@ -152,11 +191,26 @@ public class MainMenuActivity extends Activity {
 		mEnterDataButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Collect.getInstance().getActivityLogger()
+                LoadHPVFormTask task = new LoadHPVFormTask(MainMenuActivity.this.getApplicationContext()) {
+                    @Override
+                    protected void onPostExecute(Uri result) {
+                        super.onPostExecute(result);
+                        if (result == null) {
+                            createErrorDialog(getString(R.string.HPV_error_no_form), EXIT);
+                        } else {
+                            // FIXME: pre-load school data and hide some questions
+                            Intent intent = new Intent(Intent.ACTION_EDIT, result);
+                            intent.putExtra(FormEntryActivity.DATA_SKIP_TO_QUESTION, HPVConsts.HPV_FORM_BINDING_LEARNER_NAME);
+                            startActivity(intent);
+                        }
+                    }
+                };
+                task.execute(HPVConsts.HPV_FORM_NAME);
+				/*Collect.getInstance().getActivityLogger()
 						.logAction(this, "fillBlankForm", "click");
 				Intent i = new Intent(getApplicationContext(),
 						FormChooserList.class);
-				startActivity(i);
+				startActivity(i);*/
 			}
 		});
 

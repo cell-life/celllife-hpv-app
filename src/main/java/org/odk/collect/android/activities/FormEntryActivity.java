@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import org.celllife.hpv.HPVUtils;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.form.api.FormEntryCaption;
@@ -165,6 +166,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	public static final String KEY_INSTANCEPATH = "instancepath";
 	public static final String KEY_XPATH = "xpath";
 	public static final String KEY_XPATH_WAITING_FOR_DATA = "xpathwaiting";
+	
+	// Properties passed in from intent to load the form
+    public static final String DATA_SKIP_TO_QUESTION = "skipToQuestion"; // Allows for skipping of questions
 
 	private static final int MENU_LANGUAGES = Menu.FIRST;
 	private static final int MENU_HIERARCHY_VIEW = Menu.FIRST + 1;
@@ -2327,7 +2331,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * loading a form.
 	 */
 	@Override
-	public void loadingComplete(FormLoaderTask task) {
+	public void loadingComplete(FormLoaderTask task) {    
 		dismissDialog(PROGRESS_DIALOG);
 
 		FormController formController = task.getFormController();
@@ -2434,6 +2438,23 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 						// the hierarchy
 			}
 		}
+		
+		// An initial skip to question
+        final Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String skipToQuestion = extras.getString(DATA_SKIP_TO_QUESTION);
+            if (skipToQuestion != null) {
+                // FIXME: there is probably a better way of doing this, also could possibly use the FormLoaderTask XPath parameter to skip
+                String questionXPath = HPVUtils.getXPath(formController.getFormDef(),skipToQuestion);
+                FormIndex formIndex = Collect.getInstance().getFormController().getIndexFromXPath(questionXPath);
+                if (formIndex != null) {
+                    Collect.getInstance().getFormController().jumpToIndex(formIndex);
+                }
+            }
+        }
+        
+        // An initial preload of data
+        // FIXME
 
 		refreshCurrentView();
 	}

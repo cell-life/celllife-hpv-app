@@ -8,11 +8,12 @@
 	the specific language governing permissions and limitations under the License. -->
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- strings that should not be translated -->
-	<string translatable="false" name="app_name">Cell-Life ODK Capture</string>
+	<string translatable="false" name="app_name">Capture: DoH HPV</string>
+	<string translatable="false" name="splash_description">Protecting South African Girls Against Cancer of the Cervix.</string>
 	<string translatable="false" name="protocol_odk_default">odk_default</string>
 	<string translatable="false" name="protocol_google">google</string>
 	<string translatable="false" name="protocol_other"></string>
-	<string translatable="false" name="default_server_url">http://opendatakit.appspot.com</string>
+	<string translatable="false" name="default_server_url">http://sol.cell-life.org:8443/datacapture/mpsubmit/odk</string>
 	<string translatable="false" name="default_odk_formlist">/formList</string>
 	<string translatable="false" name="default_odk_submission">/submission</string>
     <item name="mapview" type="id"/>

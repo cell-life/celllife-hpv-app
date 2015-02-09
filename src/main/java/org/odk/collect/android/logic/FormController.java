@@ -21,6 +21,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Vector;
 
+import org.celllife.hpv.HPVUtils;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.GroupDef;
@@ -1214,6 +1215,9 @@ public class FormController {
                 }
             }
         }
+        
+        // override the instance name for HPV
+        instanceName = HPVUtils.getFormName(formDef, rootElement);
 
         return new InstanceMetadata(instanceId,instanceName);
     }

@@ -10,8 +10,8 @@
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.odk.collect.android"
-    android:versionCode="1042"
-    android:versionName="1.4.3" >
+    android:versionCode="1"
+    android:versionName="1.0.0" >
 
     <uses-feature android:name="android.hardware.location" android:required="false" />
     <uses-feature android:name="android.hardware.location.network" android:required="false" />
@@ -56,7 +56,7 @@
     <application
         android:name="org.odk.collect.android.application.Collect"
         android:largeHeap="true"
-        android:icon="@drawable/logo"
+        android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/Collect" >
         <provider

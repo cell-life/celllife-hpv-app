@@ -67,8 +67,10 @@
 <string name="do_not_save">Ignore Changes</string>
 <string name="entering_repeat">Add Group</string>
 <string name="entering_repeat_ask">Add New Group?</string>
-<string name="enter_data">Fill Blank Form</string>
-<string name="enter_data_button">Fill Blank Form</string>
+<string name="initial_data">Login for school</string>
+<string name="initial_data_button">Login for school</string>
+<string name="enter_data">Register learner</string>
+<string name="enter_data_button">Register learner</string>
 <string name="error_occured">Error Occurred</string>
 <string name="error_attaching_binary_file">An error occurred while attaching the media: %s</string>
 <string name="fetching_file">Getting %1$s.\n\nForm %2$s of %3$s form(s).</string>
@@ -81,7 +83,7 @@
 <string name="forms">Blank Forms</string>
 <string name="getting_location">Loading Location</string>
 <string name="get_barcode">Get Barcode</string>
-<string name="get_forms">Get Blank Form</string>
+<string name="get_forms">Update forms</string>
 <string name="get_location">Record Location</string>
 <string name="provider_disabled_error">Sorry, Location providers are disabled!</string>
 <string name="invalid_answer_error">Sorry, this response is invalid!</string>
@@ -98,7 +100,7 @@
 <string name="location_accuracy">Accuracy is %1$s m</string>
 <string name="longitude">Longitude</string>
 <string name="main_menu">Main Menu</string>
-<string name="main_menu_details">Data capture made easier.</string>
+<string name="main_menu_details">Human Papillomavirus Vaccination</string>
 <string name="manage_files">Delete Saved Form</string>
 <string name="mark_finished">Mark form as finalized</string>
 <string name="noselect_error">Sorry, you have not selected any forms!</string>
@@ -121,8 +123,8 @@
 <string name="replace_barcode">Replace Barcode</string>
 <string name="replace_location">Replace Location</string>
 <string name="required_answer_error">Sorry, this response is required!</string>
-<string name="review_data">Edit Saved Form</string>
-<string name="review_data_button">Edit Saved Form (%s)</string>
+<string name="review_data">Find learner</string>
+<string name="review_data_button">Find learner (%s)</string>
 <string name="saved_data">Incomplete (%s)</string>
 <string name="save_all_answers">Save Form</string>
 <string name="save_enter_data_description">You are at the end of %s.</string>
@@ -298,4 +300,7 @@
     <string name="unknown">unknown</string>
     <string name="no_reference">-</string>
     <string name ="reference">Reference</string>
+    
+    <string name="HPV_error_no_form">Could not find the HPV form. Try update your forms and if the problem persists, contact Cell-Life support.</string>
+    <string name="HPV_unknown_learner">Unknown learner</string>
 </resources>
