@@ -23,14 +23,10 @@ import java.lang.ref.WeakReference;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.celllife.android.AutoUpdate;
 import org.celllife.hpv.HPVConsts;
 import org.celllife.hpv.LoadHPVFormTask;
 import org.odk.collect.android.R;
-import org.odk.collect.android.activities.FileManagerTabs;
-import org.odk.collect.android.activities.FormDownloadList;
-import org.odk.collect.android.activities.FormEntryActivity;
-import org.odk.collect.android.activities.InstanceChooserList;
-import org.odk.collect.android.activities.InstanceUploaderList;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.PreferencesActivity;
@@ -171,7 +167,7 @@ public class MainMenuActivity extends Activity {
                         } else {
                             // FIXME: will probably need a specific school form also...
                             Intent intent = new Intent(Intent.ACTION_EDIT, result);
-                            intent.putExtra(FormEntryActivity.DATA_SKIP_TO_QUESTION, HPVConsts.HPV_FORM_BINDING_LEARNER_NAME);
+                            //intent.putExtra(FormEntryActivity.DATA_SKIP_TO_QUESTION, HPVConsts.HPV_FORM_BINDING_LEARNER_NAME);
                             startActivity(intent);
                         }
                     }
@@ -312,6 +308,20 @@ public class MainMenuActivity extends Activity {
 		// background
 
 		updateButtons();
+		
+		
+		AutoUpdate autoUpdate = new AutoUpdate(Collect.getInstance(), MainMenuActivity.this) {
+            @Override
+            protected void onPostExecute(Exception result) {
+                super.onPostExecute(result);
+                if (result != null) {
+                  // An error happened while doing auto update. You might want to let the user know...
+                  // createErrorDialog(getString(R.string.???), false);
+                }
+            }
+		};
+		Log.i("Dagmar", "Running auto update");
+		autoUpdate.execute();
 	}
 
 	@Override

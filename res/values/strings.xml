@@ -301,6 +301,14 @@
     <string name="no_reference">-</string>
     <string name ="reference">Reference</string>
     
+    <string name="autoupdate_version_url">AutoUpdate version URL</string>
+    <string name="autoupdate_url">AutoUpdate URL</string>
+    <string name="change_autoupdate_version_url">AutoUpdate version URL</string>
+    <string name="change_autoupdate_url">AutoUpdate URL</string>
+    <string name="update">Update ready to install</string>
+    <string name="update_ready">An update must be installed to continue to use Capture HPV.</string>
+    <string name="update_error_apk">Unable to download Capture HPV app version %1$d - check that you have a working internet connection and try again. If the problem persists, please contact Cell-Life support.</string>
+    
     <string name="HPV_error_no_form">Could not find the HPV form. Try update your forms and if the problem persists, contact Cell-Life support.</string>
     <string name="HPV_unknown_learner">Unknown learner</string>
 </resources>

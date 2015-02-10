@@ -33,6 +33,20 @@
             android:key="password"
             android:title="@string/password"
             android:password="true" />
+        <EditTextPreference
+            android:id="@+id/autoupdate_version_url"
+            android:defaultValue="@string/default_autoupdate_version_url"
+            android:dialogTitle="@string/change_autoupdate_version_url"
+            android:inputType="textNoSuggestions"
+            android:key="autoupdate_version_url"
+            android:title="@string/autoupdate_version_url" />
+        <EditTextPreference
+            android:id="@+id/autoupdate_url"
+            android:defaultValue="@string/default_autoupdate_url"
+            android:dialogTitle="@string/change_autoupdate_url"
+            android:inputType="textNoSuggestions"
+            android:key="autoupdate_url"
+            android:title="@string/autoupdate_url" />
         
         <ListPreference
             android:id="@+id/selected_google_account"

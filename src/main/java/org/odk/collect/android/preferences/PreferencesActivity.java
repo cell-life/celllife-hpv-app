@@ -66,6 +66,9 @@ public class PreferencesActivity extends PreferenceActivity implements
 	public static final String KEY_SERVER_URL = "server_url";
 	public static final String KEY_USERNAME = "username";
 	public static final String KEY_PASSWORD = "password";
+	
+	public static final String KEY_AUTOUPDATE_VERSION_URL = "autoupdate_version_url";
+	public static final String KEY_AUTOUPDATE_URL = "autoupdate_url";
 
 	public static final String KEY_PROTOCOL = "protocol";
 
@@ -101,6 +104,8 @@ public class PreferencesActivity extends PreferenceActivity implements
 	private EditTextPreference mSubmissionUrlPreference;
 	private EditTextPreference mFormListUrlPreference;
 	private EditTextPreference mServerUrlPreference;
+	private EditTextPreference mAutoUpdateVersionUrlPreference;
+	private EditTextPreference mAutoUpdateUrlPreference;
 	private EditTextPreference mUsernamePreference;
 	private EditTextPreference mPasswordPreference;
 	private ListPreference mSelectedGoogleAccountPreference;
@@ -222,6 +227,62 @@ public class PreferencesActivity extends PreferenceActivity implements
 		mServerUrlPreference.setSummary(mServerUrlPreference.getText());
 		mServerUrlPreference.getEditText().setFilters(
 				new InputFilter[] { getReturnFilter() });
+		
+        mAutoUpdateVersionUrlPreference = (EditTextPreference) findPreference(KEY_AUTOUPDATE_VERSION_URL);
+        mAutoUpdateVersionUrlPreference
+                .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference,
+                            Object newValue) {
+                        String url = newValue.toString();
+
+                        // remove all trailing "/"s
+                        while (url.endsWith("/")) {
+                            url = url.substring(0, url.length() - 1);
+                        }
+
+                        if (UrlUtils.isValidUrl(url)) {
+                            preference.setSummary(newValue.toString());
+                            return true;
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.url_error, Toast.LENGTH_SHORT)
+                                    .show();
+                            return false;
+                        }
+                    }
+                });
+        mAutoUpdateVersionUrlPreference.setSummary(mAutoUpdateVersionUrlPreference.getText());
+        mAutoUpdateVersionUrlPreference.getEditText().setFilters(
+                new InputFilter[] { getReturnFilter() });
+        
+        mAutoUpdateUrlPreference = (EditTextPreference) findPreference(KEY_AUTOUPDATE_URL);
+        mAutoUpdateUrlPreference
+                .setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference,
+                            Object newValue) {
+                        String url = newValue.toString();
+
+                        // remove all trailing "/"s
+                        while (url.endsWith("/")) {
+                            url = url.substring(0, url.length() - 1);
+                        }
+
+                        if (UrlUtils.isValidUrl(url)) {
+                            preference.setSummary(newValue.toString());
+                            return true;
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    R.string.url_error, Toast.LENGTH_SHORT)
+                                    .show();
+                            return false;
+                        }
+                    }
+                });
+        mAutoUpdateUrlPreference.setSummary(mAutoUpdateUrlPreference.getText());
+        mAutoUpdateUrlPreference.getEditText().setFilters(
+                new InputFilter[] { getReturnFilter() });
 
 
 
@@ -236,6 +297,8 @@ public class PreferencesActivity extends PreferenceActivity implements
 
 		if (!(urlAvailable || adminMode)) {
 			serverCategory.removePreference(mServerUrlPreference);
+			serverCategory.removePreference(mAutoUpdateVersionUrlPreference);
+			serverCategory.removePreference(mAutoUpdateUrlPreference);
 		}
 
 		mUsernamePreference = (EditTextPreference) findPreference(KEY_USERNAME);
