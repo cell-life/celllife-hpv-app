@@ -12,7 +12,7 @@
       </hpv_learner_vc_v1>
 </instance>
 <bind id="emis_number" nodeset="/hpv_learner_vc_v1/emis_number" type="xsd:int" required="true()"/>
-<bind id="school_name" nodeset="/hpv_learner_vc_v1/school_name" type="xsd:string" required="true()" calculate="pulldata('schoolemis', 'school_name', 'emis_key', /hpv_learner_vc_v1/emis_number)"/>
+<bind id="school_name" nodeset="/hpv_learner_vc_v1/school_name" type="xsd:string" required="true()" readonly="true()" calculate="pulldata('schoolemis', 'school_name', 'emis_key', /hpv_learner_vc_v1/emis_number)"/>
 <bind id="school_rep" nodeset="/hpv_learner_vc_v1/school_rep" type="xsd:string" required="true()"/>
 <bind id="school_rep_contact" nodeset="/hpv_learner_vc_v1/school_rep_contact" type="xsd:string" required="true()"/>
 <bind id="school_gps" nodeset="/hpv_learner_vc_v1/school_gps" format="gps" type="geopoint" required="false()"/>
