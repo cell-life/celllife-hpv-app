@@ -1,4 +1,6 @@
-This project is forked from Open Data Kit (ODK) collect from revision [ed4c594d7b99](https://code.google.com/p/opendatakit/source/detail?r=ed4c594d7b99694aa6f2bfdd08ed29ec79dc827d&repo=collect)
+This project is forked from Open Data Kit (ODK) collect from revision [ed4c594d7b99](https://code.google.com/p/opendatakit/source/detail?r=ed4c594d7b99694aa6f2bfdd08ed29ec79dc827d&repo=collect) and from the celllife-odkcollect project from revision [c8962f637](https://www.cell-life.org/gitlab/celllife-odkcollect/commit/c8962f6371a01d24c0199e11105e34bf6f32c90d)
+
+The app has been modified to add specific HPV vaccination data capturing requirements for the Department of Health (DoH).
 
 ## Setup
 
