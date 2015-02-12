@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><h:html xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xf="http://www.w3.org/2002/xforms" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:jr="http://openrosa.org/javarosa" xmlns="http://www.w3.org/2002/xforms">
+<h:head>
+<h:title>HPV School Login</h:title>
+<model>
+<instance>
+<hpv_learner_vc_v1 name="HPV School Login" id="OXD5" formKey="hpv_learner_vc">
+        <emis_number/>
+        <school_name/>
+        <school_rep/>
+        <school_rep_contact/>
+        <school_gps/>
+      </hpv_learner_vc_v1>
+</instance>
+<bind id="emis_number" nodeset="/hpv_learner_vc_v1/emis_number" type="xsd:int" required="true()"/>
+<bind id="school_name" nodeset="/hpv_learner_vc_v1/school_name" type="xsd:string" required="true()"/>
+<bind id="school_rep" nodeset="/hpv_learner_vc_v1/school_rep" type="xsd:string" required="true()"/>
+<bind id="school_rep_contact" nodeset="/hpv_learner_vc_v1/school_rep_contact" type="xsd:string" required="true()"/>
+<bind id="school_gps" nodeset="/hpv_learner_vc_v1/school_gps" format="gps" type="geopoint" required="false()"/>
+</model>
+</h:head>
+<h:body>
+<label>Page1</label>
+<input bind="emis_number">
+      <label>EMIS number</label>
+    </input>
+<input bind="school_name">
+      <label>School Name</label>
+    </input>
+<input bind="school_rep">
+      <label>Name of school representative</label>
+    </input>
+<input bind="school_rep_contact">
+      <label>School representative contact number</label>
+    </input>
+<input bind="school_gps">
+      <label>Take GPS co-ordinates of school</label>
+    </input>
+</h:body>
+</h:html>

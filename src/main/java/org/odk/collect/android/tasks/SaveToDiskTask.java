@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
 
+import org.celllife.hpv.HPVUtils;
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.services.transport.payload.ByteArrayPayload;
 import org.javarosa.form.api.FormEntryController;
@@ -54,6 +55,8 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
     private Boolean mMarkCompleted;
     private Uri mUri;
     private String mInstanceName;
+    
+    private Boolean mProxyForm = false;
 
     public static final int SAVED = 500;
     public static final int SAVE_ERROR = 501;
@@ -69,6 +72,10 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
         mInstanceName = updatedName;
     }
 
+    public SaveToDiskTask(Uri uri, Boolean saveAndExit, Boolean markCompleted, String updatedName, Boolean proxyForm) {
+        this(uri,saveAndExit,markCompleted,updatedName);
+        this.mProxyForm = proxyForm;
+    }
 
     /**
      * Initialize {@link FormEntryController} with {@link FormDef} from binary or from XML. If given
@@ -249,8 +256,12 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
         publishProgress(Collect.getInstance().getString(R.string.survey_saving_collecting_message));
 
         ByteArrayPayload payload = formController.getFilledInFormXml();
+        
         // write out xml
         String instancePath = formController.getInstancePath().getAbsolutePath();
+        if (mProxyForm) {
+            instancePath = HPVUtils.getSchoolLoginFormDataFileName();
+        }
 
         publishProgress(Collect.getInstance().getString(R.string.survey_saving_saving_message));
 
@@ -260,7 +271,9 @@ public class SaveToDiskTask extends AsyncTask<Void, String, SaveResult> {
         // Since we saved a reloadable instance, it is flagged as re-openable so that if any error
         // occurs during the packaging of the data for the server fails (e.g., encryption),
         // we can still reopen the filled-out form and re-save it at a later time.
-        updateInstanceDatabase(true, true);
+        if (!mProxyForm) {
+            updateInstanceDatabase(true, true);
+        }
 
         if ( markCompleted ) {
             // now see if the packaging of the data for the server would make it

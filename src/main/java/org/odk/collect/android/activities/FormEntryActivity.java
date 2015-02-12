@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 
+import org.celllife.hpv.HPVConsts;
 import org.celllife.hpv.HPVUtils;
 import org.javarosa.core.model.FormIndex;
 import org.javarosa.core.model.data.IAnswerData;
@@ -180,6 +181,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 	// Random ID
 	private static final int DELETE_REPEAT = 654321;
+	
+	// Form file
+	private boolean proxyForm = false;
 
 	private String mFormPath;
 	private GestureDetector mGestureDetector;
@@ -323,6 +327,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					// controller...
 					mFormLoaderTask = new FormLoaderTask(instancePath,
 							startingXPath, waitingXPath);
+					
 					Collect.getInstance().getActivityLogger()
 							.logAction(this, "formReloaded", mFormPath);
 					// TODO: this doesn' work (dialog does not get removed):
@@ -340,6 +345,8 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			Intent intent = getIntent();
 			if (intent != null) {
 				Uri uri = intent.getData();
+				
+				Log.i(t, "Loading uri="+uri+" ... "+getContentResolver().getType(uri));
 
 				if (getContentResolver().getType(uri).equals(InstanceColumns.CONTENT_ITEM_TYPE)) {
 					// get the formId and version for this instance...
@@ -432,6 +439,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 							}
 						}
 					}
+				} else if (intent.getExtras().containsKey(HPVConsts.HPV_PROXY_FORM_FILE_KEY)) {
+				    mFormPath = intent.getExtras().getString(HPVConsts.HPV_PROXY_FORM_FILE_KEY);
+				    this.proxyForm = true;
 				} else if (getContentResolver().getType(uri).equals(FormsColumns.CONTENT_ITEM_TYPE)) {
 					Cursor c = null;
 					try {
@@ -507,7 +517,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 				mFormLoaderTask = new FormLoaderTask(instancePath, null, null);
 				Collect.getInstance().getActivityLogger()
-						.logAction(this, "formLoaded", mFormPath);
+						.logAction(this, "formLoaded", mFormPath);				
+				
+				Log.i(t, "formLoaded "+mFormPath);
 				showDialog(PROGRESS_DIALOG);
 				// show dialog before we execute...
 				mFormLoaderTask.execute(mFormPath);
@@ -1057,24 +1069,49 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 
 			return startView;
 		case FormEntryController.EVENT_END_OF_FORM:
-			View endView = View.inflate(this, R.layout.form_entry_end, null);
-			((TextView) endView.findViewById(R.id.description))
-					.setText(getString(R.string.save_enter_data_description,
-							formController.getFormTitle()));
+            View endView = View.inflate(this, R.layout.form_entry_end, null);
+            ((TextView) endView.findViewById(R.id.description))
+                    .setText(getString(R.string.save_enter_data_description,
+                            formController.getFormTitle()));
+            
+            // checkbox for if finished or ready to send
+            final CheckBox instanceComplete = ((CheckBox) endView
+                    .findViewById(R.id.mark_finished));
+            instanceComplete.setChecked(isInstanceComplete(true));
+            
+            // edittext to change the displayed name of the instance
+            final EditText saveAs = (EditText) endView
+                    .findViewById(R.id.save_name);
+            
+            // textview to display an instruction on changing the saved name
+            TextView sa = (TextView) endView
+                    .findViewById(R.id.save_form_as);
 
-			// checkbox for if finished or ready to send
-			final CheckBox instanceComplete = ((CheckBox) endView
-					.findViewById(R.id.mark_finished));
-			instanceComplete.setChecked(isInstanceComplete(true));
+		    if (proxyForm) {
+		        // in the case of a dummy form (where we never want the data to go to the server)
+                instanceComplete.setVisibility(View.GONE);
+                sa.setVisibility(View.GONE);
+                saveAs.setVisibility(View.GONE);
+                // Create 'save' button
+                ((Button) endView.findViewById(R.id.save_exit_button))
+                        .setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                try {
+                                    saveDataToDisk(EXIT, false, saveAs.getText().toString());
+                                } catch (Exception e) {
+                                    Log.e(FormEntryActivity.this.t, "Could not save School Login data.", e);
+                                    createErrorDialog(getString(R.string.HPV_error_save_login), DO_NOT_EXIT);
+                                }
+                            }
+                        });
+		        return endView;
+		    }
 
 			if (!mAdminPreferences.getBoolean(
 					AdminPreferencesActivity.KEY_MARK_AS_FINALIZED, true)) {
 				instanceComplete.setVisibility(View.GONE);
 			}
-
-			// edittext to change the displayed name of the instance
-			final EditText saveAs = (EditText) endView
-					.findViewById(R.id.save_name);
 
 			// disallow carriage returns in the name
 			InputFilter returnFilter = new InputFilter() {
@@ -1117,8 +1154,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 					saveName = formController.getFormTitle();
 				}
 				// present the prompt to allow user to name the form
-				TextView sa = (TextView) endView
-						.findViewById(R.id.save_form_as);
 				sa.setVisibility(View.VISIBLE);
 				saveAs.setText(saveName);
 				saveAs.setEnabled(true);
@@ -1127,8 +1162,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 				// if instanceName is defined in form, this is the name -- no
 				// revisions
 				// display only the name, not the prompt, and disable edits
-				TextView sa = (TextView) endView
-						.findViewById(R.id.save_form_as);
 				sa.setVisibility(View.GONE);
 				saveAs.setText(saveName);
 				saveAs.setEnabled(false);
@@ -1140,8 +1173,6 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			if (!mAdminPreferences.getBoolean(
 					AdminPreferencesActivity.KEY_SAVE_AS, true)) {
 				saveAs.setVisibility(View.GONE);
-				TextView sa = (TextView) endView
-						.findViewById(R.id.save_form_as);
 				sa.setVisibility(View.GONE);
 			}
 
@@ -1721,8 +1752,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 		}
 
         synchronized (saveDialogLock) {
-		    mSaveToDiskTask = new SaveToDiskTask(getIntent().getData(), exit,
-				complete, updatedSaveName);
+		    mSaveToDiskTask = new SaveToDiskTask(getIntent().getData(), exit, complete, updatedSaveName, proxyForm);
 	    	mSaveToDiskTask.setFormSavedListener(this);
 		    showDialog(SAVING_DIALOG);
             // show dialog before we execute...
@@ -2331,7 +2361,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 	 * loading a form.
 	 */
 	@Override
-	public void loadingComplete(FormLoaderTask task) {    
+	public void loadingComplete(FormLoaderTask task) {
 		dismissDialog(PROGRESS_DIALOG);
 
 		FormController formController = task.getFormController();
@@ -2420,7 +2450,10 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			String file = mFormPath.substring(mFormPath.lastIndexOf('/') + 1,
 					mFormPath.lastIndexOf('.'));
 			String path = Collect.INSTANCES_PATH + File.separator + file + "_"
-					+ time;
+                    + time;
+			if (proxyForm) {
+			    path = Collect.INSTANCES_PATH + File.separator + file;
+			}
 			if (FileUtils.createFolder(path)) {
 				formController.setInstancePath(new File(path + File.separator
 						+ file + "_" + time + ".xml"));
@@ -2453,8 +2486,15 @@ public class FormEntryActivity extends Activity implements AnimationListener,
             }
         }
         
-        // An initial preload of data
-        // FIXME
+        // An initial preload of HPV data
+        if (getIntent().getExtras().containsKey(HPVConsts.HPV_FORM_KEY) && task.getInstancePath() == null) {
+            try {
+                HPVUtils.loadSchoolLoginData();
+            } catch (JavaRosaException e) {
+                Log.e(FormEntryActivity.this.t, "Could not load School Login data.", e);
+                createErrorDialog(getString(R.string.HPV_no_school_login), DO_NOT_EXIT);
+            }
+        }
 
 		refreshCurrentView();
 	}

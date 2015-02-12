@@ -25,11 +25,13 @@ import java.util.Map.Entry;
 
 import org.celllife.android.AutoUpdate;
 import org.celllife.hpv.HPVConsts;
+import org.celllife.hpv.HPVUtils;
 import org.celllife.hpv.LoadHPVFormTask;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
 import org.odk.collect.android.preferences.AdminPreferencesActivity;
 import org.odk.collect.android.preferences.PreferencesActivity;
+import org.odk.collect.android.provider.FormsProviderAPI.FormsColumns;
 import org.odk.collect.android.provider.InstanceProviderAPI;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
 import org.odk.collect.android.utilities.CompatibilityUtils;
@@ -37,6 +39,7 @@ import org.odk.collect.android.utilities.CompatibilityUtils;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -157,22 +160,16 @@ public class MainMenuActivity extends Activity {
 		mInitialDataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                // DAGMAR: FIXME: figure out what happens next ...
-                LoadHPVFormTask task = new LoadHPVFormTask(MainMenuActivity.this.getApplicationContext()) {
-                    @Override
-                    protected void onPostExecute(Uri result) {
-                        super.onPostExecute(result);
-                        if (result == null) {
-                            createErrorDialog(getString(R.string.HPV_error_no_form), EXIT);
-                        } else {
-                            // FIXME: will probably need a specific school form also...
-                            Intent intent = new Intent(Intent.ACTION_EDIT, result);
-                            //intent.putExtra(FormEntryActivity.DATA_SKIP_TO_QUESTION, HPVConsts.HPV_FORM_BINDING_LEARNER_NAME);
-                            startActivity(intent);
-                        }
-                    }
-                };
-                task.execute(HPVConsts.HPV_FORM_NAME);
+                try {
+                    HPVUtils.initialiseSchoolLoginForm();
+                    File formFile = HPVUtils.getSchoolLoginFormFile();
+                    Intent intent = new Intent(Intent.ACTION_EDIT, ContentUris.withAppendedId(FormsColumns.CONTENT_URI, 99999));
+                    intent.putExtra(HPVConsts.HPV_PROXY_FORM_FILE_KEY, formFile.getAbsolutePath());
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Log.e(t, "Error occurred while loading school login form.", e);
+                    createErrorDialog(e.getMessage(), false);
+                }
                 /*Collect.getInstance().getActivityLogger()
                         .logAction(this, "fillBlankForm", "click");
                 Intent i = new Intent(getApplicationContext(),
@@ -194,9 +191,9 @@ public class MainMenuActivity extends Activity {
                         if (result == null) {
                             createErrorDialog(getString(R.string.HPV_error_no_form), EXIT);
                         } else {
-                            // FIXME: pre-load school data and hide some questions
                             Intent intent = new Intent(Intent.ACTION_EDIT, result);
                             intent.putExtra(FormEntryActivity.DATA_SKIP_TO_QUESTION, HPVConsts.HPV_FORM_BINDING_LEARNER_NAME);
+                            intent.putExtra(HPVConsts.HPV_FORM_KEY, HPVConsts.HPV_FORM_NAME);
                             startActivity(intent);
                         }
                     }

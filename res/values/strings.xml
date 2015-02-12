@@ -310,5 +310,7 @@
     <string name="update_error_apk">Unable to download Capture HPV app version %1$d - check that you have a working internet connection and try again. If the problem persists, please contact Cell-Life support.</string>
     
     <string name="HPV_error_no_form">Could not find the HPV form. Try update your forms and if the problem persists, contact Cell-Life support.</string>
+    <string name="HPV_error_save_login">Could not save the School Login Form. Please try again and if the problem persists, contact Cell-Life support.</string>
+    <string name="HPV_no_school_login">There was no school login data to load. Please login for the school before capturing learner information.</string>
     <string name="HPV_unknown_learner">Unknown learner</string>
 </resources>
