@@ -15,6 +15,8 @@ public class HPVConsts {
     public static final String HPV_SCHOOL_LOGIN_FORM_FILENAME = "school-login-xform.xml";
     // Name of the file that contains the data captured in the School Login form
     public static final String HPV_SCHOOL_LOGIN_DATA_FILENAME = "school-login-data.xml";
+    // CSV file that contains the mapping of school emis to name
+    public static final String SCHOOL_EMIS_CSV_FILENAME = "schoolemis.csv";
     
     // School login form bindings
     public static final String HPV_FORM_BINDING_EMIS_NUMBER = "emis_number";
@@ -33,14 +35,5 @@ public class HPVConsts {
     public static final String HPV_FORM_KEY = "HPV_FORM";
     // Key used when loading a form to indicate that the form data must be saved to a particular file instead of the usual instance file
     public static final String HPV_PROXY_FORM_FILE_KEY = "PROXY_FORM_FILE";
-    
-    
-    // register learner fields: 
-    // Learner Name: learner_name
-    // Learner Surname: learner_surname
-    // DoB of learner: learner_dob
-    // Consent given: consent_given
-    // Take a photo of consent form: consentform_photo
-    
-    
+
 }

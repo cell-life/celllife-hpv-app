@@ -161,7 +161,7 @@ public class MainMenuActivity extends Activity {
             @Override
             public void onClick(View v) {
                 try {
-                    HPVUtils.initialiseSchoolLoginForm();
+                    HPVUtils.initialiseSchoolLoginAssets();
                     File formFile = HPVUtils.getSchoolLoginFormFile();
                     Intent intent = new Intent(Intent.ACTION_EDIT, ContentUris.withAppendedId(FormsColumns.CONTENT_URI, 99999));
                     intent.putExtra(HPVConsts.HPV_PROXY_FORM_FILE_KEY, formFile.getAbsolutePath());

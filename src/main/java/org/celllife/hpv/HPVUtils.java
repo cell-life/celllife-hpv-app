@@ -68,6 +68,15 @@ public class HPVUtils {
     }
     
     /**
+     * Gets the name of the School Emis CSV document
+     * @return
+     */
+    public static File getSchoolEmisCSVFile() {
+        String path = Collect.FORMS_PATH + File.separator + HPVConsts.HPV_SCHOOL_LOGIN_FORM_NAME + "-media" + File.separator + HPVConsts.SCHOOL_EMIS_CSV_FILENAME;
+        return new File(path); 
+    }
+    
+    /**
      * Gets the name of the file (including path) for the school login data XML file
      * @return
      */
@@ -75,19 +84,31 @@ public class HPVUtils {
         return Collect.INSTANCES_PATH + File.separator + HPVConsts.HPV_SCHOOL_LOGIN_DATA_FILENAME;
     }
     
+    public static void initialiseSchoolEmisCSV() throws IOException {
+        
+    }
+    
     /**
-     * Copies the School Login Form file to the disk (if it doesn't already exist(
+     * Copies the School Login Form XML file and School EMIS CSV document to the disk (if it doesn't already exist.
      * @throws IOException
      */
-    public static void initialiseSchoolLoginForm() throws IOException {
-        File f = getSchoolLoginFormFile();
-        if (!f.exists()) {
+    public static void initialiseSchoolLoginAssets() throws IOException {
+        copyFileFromAssertToDevice(HPVConsts.HPV_SCHOOL_LOGIN_FORM_FILENAME, getSchoolLoginFormFile());
+        copyFileFromAssertToDevice(HPVConsts.SCHOOL_EMIS_CSV_FILENAME, getSchoolEmisCSVFile());
+    }
+    
+    private static void copyFileFromAssertToDevice(String asset, File dest) throws IOException {
+        if (!dest.exists()) {
+            if (!dest.getParentFile().exists()) {
+                // create parent directories where necessary
+                dest.getParentFile().mkdir();
+            }
             Resources resources = Collect.getInstance().getResources();
             AssetManager assetManager = resources.getAssets();
             //resources.openRawResource(R.raw.school_login_xform);
-            InputStream in = assetManager.open(HPVConsts.HPV_SCHOOL_LOGIN_FORM_FILENAME);
+            InputStream in = assetManager.open(asset);
             try {
-                FileOutputStream out = new FileOutputStream(f);
+                FileOutputStream out = new FileOutputStream(dest);
                 try {
                     byte buf[] = new byte[4096];
                     int len;
