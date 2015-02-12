@@ -39,6 +39,7 @@ public class AutoUpdate extends AsyncTask<Void, Integer, Exception> {
     private Application app;
     private Activity activity;
     private SharedPreferences settings;
+    private boolean updateDownloaded = false; 
     
     public AutoUpdate(Application app, Activity activity) {
         super();
@@ -47,6 +48,14 @@ public class AutoUpdate extends AsyncTask<Void, Integer, Exception> {
         this.activity = activity;
         // Get a handle on the settings file for later use (URLS, etc)
         settings = PreferenceManager.getDefaultSharedPreferences(this.activity.getBaseContext());
+    }
+    
+    /**
+     * Indication if an update was downloaded - doesn't indicate if it was successfully installed (unfortunately)
+     * @return true if an update was downloaded
+     */
+    public boolean isUpdateDownloaded() {
+        return updateDownloaded;
     }
     
     @Override
@@ -65,6 +74,7 @@ public class AutoUpdate extends AsyncTask<Void, Integer, Exception> {
         int targetAppVersion = getLatestVersionCode();
         if (currentVersion < targetAppVersion) {
             final Uri downloadedUpdate = downloadAPK(targetAppVersion);
+            updateDownloaded = true;
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

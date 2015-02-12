@@ -84,8 +84,19 @@ public class HPVUtils {
         return Collect.INSTANCES_PATH + File.separator + HPVConsts.HPV_SCHOOL_LOGIN_DATA_FILENAME;
     }
     
-    public static void initialiseSchoolEmisCSV() throws IOException {
-        
+    /**
+     * Cleanup of assets copied to the device on the event of an update
+     * @throws IOException
+     */
+    public static void cleanupAssets() throws IOException {
+        getSchoolLoginFormFile().delete();
+        File mediaDirectory = getSchoolEmisCSVFile().getParentFile();
+        if (mediaDirectory != null && mediaDirectory.exists()) {
+            for (File f : mediaDirectory.listFiles()) {
+                f.delete();
+            }
+        }
+        mediaDirectory.delete();
     }
     
     /**
@@ -105,7 +116,7 @@ public class HPVUtils {
             }
             Resources resources = Collect.getInstance().getResources();
             AssetManager assetManager = resources.getAssets();
-            //resources.openRawResource(R.raw.school_login_xform);
+
             InputStream in = assetManager.open(asset);
             try {
                 FileOutputStream out = new FileOutputStream(dest);

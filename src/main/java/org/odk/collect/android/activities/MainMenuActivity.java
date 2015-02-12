@@ -311,8 +311,19 @@ public class MainMenuActivity extends Activity {
             @Override
             protected void onPostExecute(Exception result) {
                 super.onPostExecute(result);
-                if (result != null) {
+                if (result == null) {
+                    if (isUpdateDownloaded()) {
+                        try {
+                            HPVUtils.cleanupAssets();
+                        } catch (IOException e) {
+                            Log.e(t, "Error while cleaning up assets", e);
+                            // Might want to let them know that cleanup failed
+                            // createErrorDialog(getString(R.string.???), false);
+                        }
+                    }
+                } else {
                   // An error happened while doing auto update. You might want to let the user know...
+                  Log.e(t, "Error while checking, downloading and installing the app update", result);
                   // createErrorDialog(getString(R.string.???), false);
                 }
             }
