@@ -165,6 +165,7 @@ public class MainMenuActivity extends Activity {
                     File formFile = HPVUtils.getSchoolLoginFormFile();
                     Intent intent = new Intent(Intent.ACTION_EDIT, ContentUris.withAppendedId(FormsColumns.CONTENT_URI, 99999));
                     intent.putExtra(HPVConsts.HPV_PROXY_FORM_FILE_KEY, formFile.getAbsolutePath());
+                    intent.putExtra(HPVConsts.HPV_FORM_KEY, HPVConsts.HPV_SCHOOL_LOGIN_FORM_NAME);
                     startActivity(intent);
                 } catch (Exception e) {
                     Log.e(t, "Error occurred while loading school login form.", e);

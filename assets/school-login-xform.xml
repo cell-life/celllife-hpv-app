@@ -12,7 +12,7 @@
         <school_gps/>
       </hpv_learner_vc_v1>
 </instance>
-<bind id="emis_number" nodeset="/hpv_learner_vc_v1/emis_number" type="xsd:int" required="true()"/>
+<bind id="emis_number" nodeset="/hpv_learner_vc_v1/emis_number" type="xsd:string" required="true()"/>
 <bind id="school_name" nodeset="/hpv_learner_vc_v1/school_name" type="xsd:string" readonly="true()" calculate="pulldata('schoolemis', 'school_name', 'emis_key', /hpv_learner_vc_v1/emis_number)" constraint=". != ''" jr:constraintMsg="School name must not be empty - please check that the EMIS number was entered correctly"/>
 <bind id="school_name_entry" nodeset="/hpv_learner_vc_v1/school_name_entry" type="xsd:string" required="true()" relevant="/hpv_learner_vc_v1/school_name = ''" action="show" />
 <bind id="school_rep" nodeset="/hpv_learner_vc_v1/school_rep" type="xsd:string" required="true()"/>
@@ -22,7 +22,7 @@
 </h:head>
 <h:body>
 <label>Page1</label>
-<input bind="emis_number">
+<input bind="emis_number" appearance="numbers">
       <label>EMIS number</label>
     </input>
 <input bind="school_name">
