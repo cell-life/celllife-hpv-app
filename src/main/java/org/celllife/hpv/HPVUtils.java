@@ -12,6 +12,7 @@ import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.core.model.instance.TreeReference;
+import org.javarosa.form.api.FormEntryPrompt;
 import org.javarosa.xform.parse.XFormParser;
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
@@ -26,6 +27,34 @@ import android.content.res.Resources;
  * Useful functions for the DoH HPV app
  */
 public class HPVUtils {
+    
+    /**
+     * Determine if the form should be marked as final
+     * @param completed boolean indicating the current option
+     * @return boolean new completed flag
+     */
+    public static boolean isHPVFormComplete(boolean completed) {
+        FormController formController = Collect.getInstance().getFormController();
+        FormDef formDef = formController.getFormDef();
+        if (HPVConsts.HPV_FORM_NAME.equals(formController.getFormTitle())) {
+            // if absent has been marked for vac one or vac two, then don't make the form finalised
+            FormIndex index1 = formController.getIndexFromXPath(getXPath(formDef, HPVConsts.HPV_FORM_BINDING_HPV_VAC_ONE));
+            if (index1 != null) {
+                FormEntryPrompt prompt1 = formController.getQuestionPrompt(index1);
+                if (prompt1 != null && HPVConsts.HPV_VAC_ABSENT.equals(prompt1.getAnswerText())) {
+                    return false;
+                }
+            }
+            FormIndex index2 = formController.getIndexFromXPath(getXPath(formDef, HPVConsts.HPV_FORM_BINDING_HPV_VAC_TWO));
+            if (index1 != null) {
+                FormEntryPrompt prompt2 = formController.getQuestionPrompt(index2);
+                if (prompt2 != null && HPVConsts.HPV_VAC_ABSENT.equals(prompt2.getAnswerText())) {
+                    return false;
+                }
+            }
+        }
+        return completed;
+    }
     
     /**
      * Loads the data from the saved School Login form and inserts it in the current form

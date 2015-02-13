@@ -30,6 +30,11 @@ public class HPVConsts {
     public static final String HPV_FORM_BINDING_LEARNER_NAME = "learner_name";
     public static final String HPV_FORM_BINDING_LEARNER_SURNAME = "learner_surname";
     
+    // Bindings of fields important for marking the form as finalised
+    public static final String HPV_FORM_BINDING_HPV_VAC_ONE = "hpv_vac_one";
+    public static final String HPV_FORM_BINDING_HPV_VAC_TWO = "hpv_vac_two";
+    public static final String HPV_VAC_ABSENT = "Absent";
+    
     // Key used when loading a form to control where the form should start
     public static final String HPV_QUESTION_INDEX = "hpv_question_index";
     // Key used when loading a form to indicate that the form being loaded is the HPV form and needs data pre-loading

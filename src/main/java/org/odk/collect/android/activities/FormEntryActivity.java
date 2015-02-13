@@ -2635,6 +2635,9 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 			}
 		}
 		
+        // allow for overriding rules for HPV
+        complete = HPVUtils.isHPVFormComplete(complete);
+		
 		return complete;
 	}
 
