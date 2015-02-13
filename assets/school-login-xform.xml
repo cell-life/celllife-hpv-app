@@ -6,13 +6,15 @@
 <hpv_learner_vc_v1 name="HPV School Login" id="OXD9999999999" formKey="hpv_learner_vc">
         <emis_number/>
         <school_name/>
+        <school_name_entry/>
         <school_rep/>
         <school_rep_contact/>
         <school_gps/>
       </hpv_learner_vc_v1>
 </instance>
 <bind id="emis_number" nodeset="/hpv_learner_vc_v1/emis_number" type="xsd:int" required="true()"/>
-<bind id="school_name" nodeset="/hpv_learner_vc_v1/school_name" type="xsd:string" required="true()" readonly="true()" calculate="pulldata('schoolemis', 'school_name', 'emis_key', /hpv_learner_vc_v1/emis_number)"/>
+<bind id="school_name" nodeset="/hpv_learner_vc_v1/school_name" type="xsd:string" readonly="true()" calculate="pulldata('schoolemis', 'school_name', 'emis_key', /hpv_learner_vc_v1/emis_number)" constraint=". != ''" jr:constraintMsg="School name must not be empty - please check that the EMIS number was entered correctly"/>
+<bind id="school_name_entry" nodeset="/hpv_learner_vc_v1/school_name_entry" type="xsd:string" required="true()" relevant="/hpv_learner_vc_v1/school_name = ''" action="show" />
 <bind id="school_rep" nodeset="/hpv_learner_vc_v1/school_rep" type="xsd:string" required="true()"/>
 <bind id="school_rep_contact" nodeset="/hpv_learner_vc_v1/school_rep_contact" type="xsd:string" required="true()"/>
 <bind id="school_gps" nodeset="/hpv_learner_vc_v1/school_gps" format="gps" type="geopoint" required="false()"/>
@@ -25,11 +27,16 @@
     </input>
 <input bind="school_name">
       <label>School Name</label>
+      <hint>If this is empty, please go back and check that the EMIS number was entered correctly.</hint>
     </input>
+<input bind="school_name_entry">
+      <label>Enter school name</label>
+      <hint>The EMIS number you entered could not be found. If you have checked that the EMIS number you entered is correct, please enter the school name now.</hint>
+</input>
 <input bind="school_rep">
       <label>Name of school representative</label>
     </input>
-<input bind="school_rep_contact">
+<input bind="school_rep_contact" appearance="numbers">
       <label>School representative contact number</label>
     </input>
 <input bind="school_gps">

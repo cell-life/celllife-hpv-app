@@ -21,6 +21,7 @@ public class HPVConsts {
     // School login form bindings
     public static final String HPV_FORM_BINDING_EMIS_NUMBER = "emis_number";
     public static final String HPV_FORM_BINDING_SCHOOL_NAME = "school_name";
+    public static final String HPV_FORM_BINDING_SCHOOL_NAME_ENTRY = "school_name_entry";
     public static final String HPV_FORM_BINDING_SCHOOL_REP = "school_rep";
     public static final String HPV_FORM_BINDING_SCHOOL_REP_CONTACT = "school_rep_contact";
     public static final String HPV_FORM_BINDING_SCHOOL_GPS = "school_gps";

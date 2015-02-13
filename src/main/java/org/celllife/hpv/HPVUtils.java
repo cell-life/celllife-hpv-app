@@ -8,6 +8,7 @@ import java.util.Vector;
 
 import org.javarosa.core.model.FormDef;
 import org.javarosa.core.model.FormIndex;
+import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.core.model.instance.TreeElement;
 import org.javarosa.core.model.instance.TreeReference;
@@ -36,7 +37,10 @@ public class HPVUtils {
             byte[] fileBytes = FileUtils.getFileAsBytes(loginFormDataFile);
             TreeElement savedRoot = XFormParser.restoreDataModel(fileBytes, null).getRoot();
             setFormData(savedRoot, HPVConsts.HPV_FORM_BINDING_EMIS_NUMBER);
-            setFormData(savedRoot, HPVConsts.HPV_FORM_BINDING_SCHOOL_NAME);
+            IAnswerData answer = setFormData(savedRoot, HPVConsts.HPV_FORM_BINDING_SCHOOL_NAME);
+            if (answer == null || answer.getValue() == null || answer.getValue().toString().trim().equals("")) {
+                setFormData(savedRoot, HPVConsts.HPV_FORM_BINDING_SCHOOL_NAME_ENTRY);
+            }
             setFormData(savedRoot, HPVConsts.HPV_FORM_BINDING_SCHOOL_REP);
             setFormData(savedRoot, HPVConsts.HPV_FORM_BINDING_SCHOOL_REP_CONTACT);
             setFormData(savedRoot, HPVConsts.HPV_FORM_BINDING_SCHOOL_GPS);
@@ -46,16 +50,19 @@ public class HPVUtils {
         }
     }
     
-    private static void setFormData(TreeElement savedRoot, String binding) throws JavaRosaException {
+    private static IAnswerData setFormData(TreeElement savedRoot, String binding) throws JavaRosaException {
+        IAnswerData answer = null;
         FormController formController = Collect.getInstance().getFormController();
         FormDef formDef = formController.getFormDef();
         TreeElement question = savedRoot.getChild(binding, TreeReference.DEFAULT_MUTLIPLICITY);
         if (question != null) {
             FormIndex index = formController.getIndexFromXPath(getXPath(formDef, binding));
             if (index != null) {
-                formController.answerQuestion(index, question.getValue());
+                answer = question.getValue();
+                formController.answerQuestion(index, answer);
             }
         }
+        return answer;
     }
 
     /**
