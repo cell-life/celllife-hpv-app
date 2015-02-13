@@ -18,13 +18,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.odk.collect.android.R;
 import org.odk.collect.android.application.Collect;
+import org.odk.collect.android.listeners.DeleteInstancesListener;
 import org.odk.collect.android.listeners.InstanceUploaderListener;
 import org.odk.collect.android.preferences.PreferencesActivity;
 import org.odk.collect.android.provider.InstanceProviderAPI.InstanceColumns;
+import org.odk.collect.android.tasks.DeleteInstancesTask;
 import org.odk.collect.android.tasks.InstanceUploaderTask;
 import org.odk.collect.android.utilities.WebUtils;
 
@@ -226,6 +229,10 @@ public class InstanceUploaderActivity extends Activity implements InstanceUpload
             }
         }
 
+        
+        String successStatus = Collect.getInstance().getString(R.string.success);
+        
+        List<Long> idsToDelete = new ArrayList<Long>();
         StringBuilder message = new StringBuilder();
         {
             Cursor results = null;
@@ -238,7 +245,11 @@ public class InstanceUploaderActivity extends Activity implements InstanceUpload
                         String name = results.getString(results.getColumnIndex(InstanceColumns.DISPLAY_NAME));
                         String reference = results.getString(results.getColumnIndex(InstanceColumns.REFERENCE));
                         String id = results.getString(results.getColumnIndex(InstanceColumns._ID));
-                        message.append(name + " (" + reference + ") " + result.get(id) + "\n\n");
+                        String status = result.get(id);
+                        if (successStatus.equals(status)) {
+                            idsToDelete.add(Long.parseLong(id));
+                        }
+                        message.append(name + " (" + reference + ") " + status + "\n\n");
                     }
                 } else {
                     message.append(getString(R.string.no_forms_uploaded));
@@ -248,6 +259,18 @@ public class InstanceUploaderActivity extends Activity implements InstanceUpload
         			results.close();
         		}
         	}
+        }
+        
+        if (idsToDelete.size() > 0) {
+            Log.i(t, "Deleting the following forms after a successful upload: "+idsToDelete);
+            DeleteInstancesTask mDeleteInstancesTask = new DeleteInstancesTask();
+            mDeleteInstancesTask.setContentResolver(getContentResolver());
+            mDeleteInstancesTask.setDeleteListener(new DeleteInstancesListener() {
+                @Override
+                public void deleteComplete(int deletedInstances) {
+                }
+            });
+            mDeleteInstancesTask.execute(idsToDelete.toArray(new Long[idsToDelete.size()]));
         }
 
         createAlertDialog(message.toString().trim());
