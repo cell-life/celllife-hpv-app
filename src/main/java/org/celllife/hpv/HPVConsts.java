@@ -37,4 +37,7 @@ public class HPVConsts {
     // Key used when loading a form to indicate that the form data must be saved to a particular file instead of the usual instance file
     public static final String HPV_PROXY_FORM_FILE_KEY = "PROXY_FORM_FILE";
 
+    // default sizes for the consent form image to avoid a too large upload
+    public static int IMAGE_WIDTH = 480;
+    public static int IMAGE_HEIGHT = 640;
 }

@@ -199,6 +199,7 @@ public class FileUtils {
 
         // get bitmap with scale ( < 1 is the same as 1)
         BitmapFactory.Options options = new BitmapFactory.Options();
+        // Dagmar: could use options.inSampleSize (http://stackoverflow.com/questions/9958362/change-bitmap-resolution-in-android-app)
         options.inInputShareable = true;
         options.inPurgeable = true;
         options.inSampleSize = scale;

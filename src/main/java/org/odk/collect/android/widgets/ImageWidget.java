@@ -16,6 +16,7 @@ package org.odk.collect.android.widgets;
 
 import java.io.File;
 
+import org.celllife.hpv.HPVConsts;
 import org.javarosa.core.model.data.IAnswerData;
 import org.javarosa.core.model.data.StringData;
 import org.javarosa.form.api.FormEntryPrompt;
@@ -180,8 +181,8 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
             Display display =
                 ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
                         .getDefaultDisplay();
-            int screenWidth = display.getWidth();
-            int screenHeight = display.getHeight();
+            int screenWidth = HPVConsts.IMAGE_WIDTH;//display.getWidth();
+            int screenHeight = HPVConsts.IMAGE_HEIGHT;//display.getHeight();
 
             File f = new File(mInstanceFolder + File.separator + mBinaryName);
 
