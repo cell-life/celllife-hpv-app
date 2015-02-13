@@ -405,7 +405,8 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 						try {
 							formCursor = getContentResolver().query(
 									FormsColumns.CONTENT_URI, null, selection,
-									selectionArgs, null);
+									selectionArgs,
+									FormsColumns.DATE+" DESC");
 							if (formCursor.getCount() == 1) {
 								formCursor.moveToFirst();
 								mFormPath = formCursor
@@ -430,7 +431,8 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 								// database to fix it.
 								formCursor.moveToFirst();
 								mFormPath = formCursor.getString(formCursor.getColumnIndex(FormsColumns.FORM_FILE_PATH));
-								this.createErrorDialog(getString(R.string.survey_multiple_forms_error),	EXIT);
+								// Dagmar: just take the latest form!
+								//this.createErrorDialog(getString(R.string.survey_multiple_forms_error),	EXIT);
                                 return;
 							}
 						} finally {
@@ -2634,6 +2636,7 @@ public class FormEntryActivity extends Activity implements AnimationListener,
 				c.close();
 			}
 		}
+		
 		return complete;
 	}
 
