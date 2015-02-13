@@ -2491,8 +2491,11 @@ public class FormEntryActivity extends Activity implements AnimationListener,
             try {
                 HPVUtils.loadSchoolLoginData();
             } catch (JavaRosaException e) {
-                Log.e(FormEntryActivity.this.t, "Could not load School Login data.", e);
-                createErrorDialog(getString(R.string.HPV_no_school_login), DO_NOT_EXIT);
+                String formName = getIntent().getExtras().get(HPVConsts.HPV_FORM_KEY).toString();
+                if (HPVConsts.HPV_FORM_NAME.equals(formName)) {
+                    Log.e(FormEntryActivity.this.t, "Could not load School Login data.", e);
+                    createErrorDialog(getString(R.string.HPV_no_school_login), DO_NOT_EXIT);
+                }
             }
         }
 
