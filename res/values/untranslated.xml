@@ -13,9 +13,9 @@
 	<string translatable="false" name="protocol_odk_default">odk_default</string>
 	<string translatable="false" name="protocol_google">google</string>
 	<string translatable="false" name="protocol_other"></string>
-	<string translatable="false" name="default_server_url">http://sol.cell-life.org:8443/datacapture/mpsubmit/odk</string>
-	<string translatable="false" name="default_autoupdate_version_url">http://sol.cell-life.org:8443/datacapture/app/version.html</string>
-	<string translatable="false" name="default_autoupdate_url">http://sol.cell-life.org:8443/datacapture/app/%d/app.apk</string>
+	<string translatable="false" name="default_server_url">https://doh.cell-life.org/datacapture/mpsubmit/odk</string>
+	<string translatable="false" name="default_autoupdate_version_url">https://doh.cell-life.org/datacapture/hpv/version.html</string>
+	<string translatable="false" name="default_autoupdate_url">https://doh.cell-life.org/datacapture/hpv/%d/app.apk</string>
 	<string translatable="false" name="default_odk_formlist">/formList</string>
 	<string translatable="false" name="default_odk_submission">/submission</string>
     <item name="mapview" type="id"/>
