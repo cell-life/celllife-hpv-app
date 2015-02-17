@@ -181,12 +181,13 @@ public class ImageWidget extends QuestionWidget implements IBinaryWidget {
             Display display =
                 ((WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE))
                         .getDefaultDisplay();
-            int screenWidth = HPVConsts.IMAGE_WIDTH;//display.getWidth();
-            int screenHeight = HPVConsts.IMAGE_HEIGHT;//display.getHeight();
+            int screenWidth = display.getWidth();
+            int screenHeight = display.getHeight();
 
             File f = new File(mInstanceFolder + File.separator + mBinaryName);
 
             if (f.exists()) {
+                FileUtils.compressAndScaleBitmap(f, screenHeight, screenWidth);
                 Bitmap bmp = FileUtils.getBitmapScaledToDisplay(f, screenHeight, screenWidth);
                 if (bmp == null) {
                     mErrorTextView.setVisibility(View.VISIBLE);

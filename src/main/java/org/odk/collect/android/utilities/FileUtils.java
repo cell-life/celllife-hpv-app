@@ -14,18 +14,6 @@
 
 package org.odk.collect.android.utilities;
 
-import org.apache.commons.io.IOUtils;
-import org.javarosa.xform.parse.XFormParser;
-import org.kxml2.kdom.Document;
-import org.kxml2.kdom.Element;
-import org.kxml2.kdom.Node;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-import org.odk.collect.android.R;
-import org.odk.collect.android.application.Collect;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -39,6 +27,20 @@ import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+
+import org.apache.commons.io.IOUtils;
+import org.celllife.hpv.HPVConsts;
+import org.javarosa.xform.parse.XFormParser;
+import org.kxml2.kdom.Document;
+import org.kxml2.kdom.Element;
+import org.kxml2.kdom.Node;
+import org.odk.collect.android.R;
+import org.odk.collect.android.application.Collect;
+
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 /**
  * Static methods used for common file operations.
@@ -181,6 +183,51 @@ public class FileUtils {
             return null;
         }
 
+    }
+    
+    public static void compressAndScaleBitmap(File f,  int screenHeight, int screenWidth) {
+        Log.i(t, "Image size is: "+f.length());
+
+        // Load the bitmap
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(f.getAbsolutePath(), o);
+        
+        // determine the scale
+        int heightScale = o.outHeight / screenHeight;
+        int widthScale = o.outWidth / screenWidth;
+        int scale = Math.max(widthScale, heightScale);
+        
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inInputShareable = true;
+        options.inPurgeable = true;
+        options.inSampleSize = scale;
+        Bitmap b = BitmapFactory.decodeFile(f.getAbsolutePath(), options);
+
+        // Compress the Bitmap to a temp file
+        if (b != null) {
+            try {
+                File tmpFile = File.createTempFile("bitmap", null);
+                FileOutputStream fos = new FileOutputStream(tmpFile);
+                try {
+                    Log.i(t, "Compressing image at '"+tmpFile.getAbsolutePath()+"' to "+HPVConsts.JPEG_QUALITY);
+                    b.compress(CompressFormat.JPEG, HPVConsts.JPEG_QUALITY, fos);
+                } finally {
+                    try {
+                        fos.flush();
+                        fos.close();
+                    } catch (Exception e) {}
+                }
+                
+                Log.i(t, "Image tmp size is: "+tmpFile.length());
+
+                copyFile(tmpFile, f);
+
+            } catch (IOException e) {
+                Log.e(t, "Cannot create a temp file for compressing the bitmap.", e);
+            }
+        }
+        Log.i(t, "Image size is now: "+f.length());
     }
 
 

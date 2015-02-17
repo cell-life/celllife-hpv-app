@@ -45,4 +45,5 @@ public class HPVConsts {
     // default sizes for the consent form image to avoid a too large upload
     public static int IMAGE_WIDTH = 480;
     public static int IMAGE_HEIGHT = 640;
+    public static int JPEG_QUALITY = 75;
 }
