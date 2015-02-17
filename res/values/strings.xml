@@ -71,6 +71,7 @@
 <string name="initial_data_button">Login for school</string>
 <string name="enter_data">Register learner</string>
 <string name="enter_data_button">Register learner</string>
+<string name="enter_data_button_login">Register learner for %1s</string>
 <string name="error_occured">Error Occurred</string>
 <string name="error_attaching_binary_file">An error occurred while attaching the media: %s</string>
 <string name="fetching_file">Getting %1$s.\n\nForm %2$s of %3$s form(s).</string>

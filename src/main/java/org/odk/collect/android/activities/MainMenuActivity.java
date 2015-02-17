@@ -374,6 +374,11 @@ public class MainMenuActivity extends Activity {
 		} else {
 			mManageFilesButton.setVisibility(View.VISIBLE);
 		}
+		
+		String schoolName = HPVUtils.getCurrentSchoolName();
+		if (schoolName != null && !schoolName.trim().equals("")) {
+		    mEnterDataButton.setText(getApplicationContext().getString(R.string.enter_data_button_login, schoolName));
+		}
 	}
 
 	@Override

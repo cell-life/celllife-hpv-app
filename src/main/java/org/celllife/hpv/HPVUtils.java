@@ -79,6 +79,35 @@ public class HPVUtils {
         }
     }
     
+    /**
+     * Gets the currently logged in school name (either pulled from the CSV or written in)
+     */
+    public static String getCurrentSchoolName() {
+        String currentSchoolName = null;
+        File loginFormDataFile = new File(getSchoolLoginFormDataFileName());
+        if (loginFormDataFile.exists()) {
+            byte[] fileBytes = FileUtils.getFileAsBytes(loginFormDataFile);
+            TreeElement savedRoot = XFormParser.restoreDataModel(fileBytes, null).getRoot();
+            TreeElement question = savedRoot.getChild(HPVConsts.HPV_FORM_BINDING_SCHOOL_NAME, TreeReference.DEFAULT_MUTLIPLICITY);
+            if (question != null) {
+                IAnswerData answer = question.getValue();
+                if (answer != null) {
+                    currentSchoolName = (String)answer.getValue();
+                }
+            }
+            if (currentSchoolName == null || currentSchoolName.trim().equals("")) {
+                TreeElement question2 = savedRoot.getChild(HPVConsts.HPV_FORM_BINDING_SCHOOL_NAME_ENTRY, TreeReference.DEFAULT_MUTLIPLICITY);
+                if (question2 != null) {
+                    IAnswerData answer = question2.getValue();
+                    if (answer != null) {
+                        currentSchoolName = (String)answer.getValue();
+                    }
+                }
+            }
+        }
+        return currentSchoolName;
+    }
+    
     private static IAnswerData setFormData(TreeElement savedRoot, String binding) throws JavaRosaException {
         IAnswerData answer = null;
         FormController formController = Collect.getInstance().getFormController();
